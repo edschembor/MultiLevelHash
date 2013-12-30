@@ -1,0 +1,5 @@
+This repository represents my final project for a class on C++ programming.
+
+After compiling, Part 1 runs the multi-level hash table to show its efficieny. Each
+"step" represents a pointer change. Part 2 uses the hash table and demonstrates use
+of classes, inheritance, and interfaces.

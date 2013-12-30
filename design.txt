@@ -1,0 +1,269 @@
+Edward Schembor
+Final Project 
+Design Document
+
+Part 1:
+
+Project Goal: To create a Multi-Level Hash Table using templates so that the
+data structure can hold any type of data.
+
+Overall Project Structure:
+There are 2 main classes: 
+   (1) A Node class which holds arrays of keys, pointers to data, and 
+       pointers to other nodes. Each node also know how many keys are
+	   being held below it.
+   (2) A Table class which is the actual hash table. It holds all of the 
+       nodes and deals with the more structure-related operations.
+
+Project Main:
+The main.cpp file controls the "flow" for part1 of the Final Project. Using
+the provided Random_operation class, a random operation is called using a 
+random key. When inserting, the number of operation being performed is
+used as the data.
+
+-----------------------------------------------------------
+
+Classes:
+
+Node: The class which makes up the structure. Holds all of the data of the
+structure.
+
+Variables (all private):
+
+int keys[]: holds the key elements
+NODETYPE *data[]: holds pointers to the data of each key
+Node< NODETYPE > *pointers[]: holds pointers to other nodes to allow for
+the connection of the structures
+int keysBelow: holds the number of keys being held below this node
+
+Methods (all public):
+
+Node(): Constructor --- sets all keys to 0 and the pointers to NULL
+insert( key, *data ): inserts a key/data comination into the first empty
+spot in the node
+deleteFromNode( key ): if the key is in the node, deletes it and returns 
+a pointer to its data; if not, returns NULL
+get( key ): if the key is in the node, returns a poiter to its data; if not,
+returns NULL
+compress(): moves data from child nodes into parent node and deeltes the 
+child nodes. Returns how many nodes were deleted.
+node_print(): uses recursion to go through each child node and print its
+keys
+
+--------------------
+
+Table: The main structure in the program.
+
+Variables (all private):
+
+Node< NODETYPE > first: essentially a sentinal node - the 0th level node
+int deepestLevel: holds the level of the deepest node in the table
+int nodeCount: holds the number of nodes in the table
+bool printAll: determines if the print method should print out keys and data
+int countPerLevel[]: hold the number of nodes on each level
+int steps: keeps track of how many steps have been taken to track efficiency
+
+Methods (all public):
+
+Table(): Constructor --- Sets all variables to zero and printAll to true
+~Table(): Deconstructor --- Calls deconstructorHelper on the first node
+MLH_insert( int, *data ): inserts a key, data combination into the table if
+the specified key is not already in the table. If there is no room, the
+table makes room by "expanding" to create nodes and room to insert. Returns
+a pointer to the data if inserted, returns NULL if not.
+MLH_delete( int ): deletes a key from the table if it exists in the table.
+After the deletion, if a a parent node can fit the data of all of its
+child nodes, the table "collapses" by moving all lower data to the parent
+node and deleting the child nodes. Returns a pointer to the data if deleted,
+and NULL if not.
+MLH_get( int ): if the given int key is in the table, returns a pointer to
+its data; if not, returns NULL.
+MLH_expand( Node< NODETYPE >, int level, int key ): expands a given node on
+a given level. Also checks to see if a given key will need expanding.
+MLH_print(): prints out the number of hash nodes, deepest level, and the
+number of items in the table. Also prints out all of the keys and data if
+printAll is true
+MLH_set_print_option(): changes the printAll boolean
+getSteps(): returns the number of steps performed so far
+getKeyCount(): returns the number of keys in the table
+deconstructHelper(): recursively goes through each node, deleting its
+contents and it
+
+------------------------
+
+Part 1 Results Analysis:
+
+Test 1a: Range = 100, Operations = 1000 Steps = 5,114 
+Test 1b: Range = 100, Operations = 1,000,000, Steps = 6,521,249
+Test 1c: Range = 10000, Operations = 1,000,000, Steps = 7,585,806
+Test 1d: Range = 100000, Operations = 10,000,000, Steps = 92,994,042
+
+For tests below, a: Range = 10,000, Operations = 1,000,000
+                 b: Range = 100,000, Operations = 10,000,000
+
+Test 2.1a: Seed = 2, Steps = 7568678
+Test 2.1b: Seed = 2, Steps = 93005368
+Test 2.2a: Seed = 3, Steps = 7573811
+Test 2.2b: Seed = 3, Steps = 92996274
+Test 2.3a: Seed = 4, Steps = 7579618
+Test 2.3b: Seed = 4, Steps = 93028210
+Test 2.4a: Seed = 5, Steps = 7574483
+Test 2.4b: Seed = 5, Steps = 93019850
+Test 2.5a: Seed = 6, Steps = 7572843
+Test 2.5b: Seed = 6, Steps = 93000705
+Test 2.6a: Seed = 7, Steps = 7583460 
+Test 2.6b: Seed = 7, Steps = 92982013
+Test 2.7a: Seed = 8, Steps = 7574856
+Test 2.7b: Seed = 8, Steps = 93018702
+Test 2.8a: Seed = 9, Steps = 7578657
+Test 2.8b: Seed = 9, Steps = 92976225
+Test 2.9a: Seed = 10, Steps = 7584821
+Test 2.9b: Seed = 10, Steps = 92977104
+
+Average steps for a: 7577703.3
+Average steps for b: 92999849.3
+
+These numbers make sense and are in the ballpark of the expected values.
+The steps for each seed are in the same range. Also, on average, each
+operation takes about 7-9 steps, which is expected for this data
+structure.
+
+------------------------------------------------------------
+
+Part 2:
+
+Project Goal: To create a virtual car mainteneance center in which useres
+can serve a line of vehicles by allowing vehicles to add tasks to the 
+vehicles and perform said tasks. Also, to use the structure created in
+part 1 to hold the data for the vehicles.
+
+Overall Project Structure: The program's "flow" is controlled in main2.cpp.
+There, all of the text and user input is handled. The main file contains a
+few helper methods to reduce code clutter, all of which are self-explanatory
+in the code.
+
+Generally, the user is given a set of options, the user inputs their choice,
+and, if the choice is valid, a set of operations are run.
+
+Main Globals:
+
+Table< Vehicle > table: an instance of the Table class whih holds Vehicles
+Task_List task_list: and instance of the Task_List class
+int id: keeps track of the next id
+float totalSales: holds the total sales for the maintenance center
+Vehicle *selected: a pointer to a selected vehicle
+
+-------------------------
+
+Classes:
+
+Vehicle: The most general type of object
+
+Variables:
+
+int id: the vehicle's id
+int modelYear: the vehicles's mode year
+float mileage: the vehicle's mileage
+string color: the vehicle's color
+Task node: a sentinal node for the vehicle's list of tasks
+
+Methods:
+
+The accessors and setters are self-explanatory in the code
+addTask( *task ): adds a task to the vehicle's list of tasks
+checkout(): removes each task from the vehicle, deletes the vehicle, and
+returns the cumilitive cost of all tasks performed on the vehicle
+print(): a virtual function which prints all of the vehicle's attributes
+
+-------------
+
+Car: A more specific vehicle - Inherits from the Vehicle class
+
+Variables:
+
+int engineSize: the car's engineSize
+float pollutionLevel: the car's pollution level
+string gasType: the car's gast type
+
+Methods:
+
+The accessors and setters are self-explanatory in the code
+print(): a virtual function which overrides the vehicle's print function
+
+-------------
+
+Hybrid: A more specific car - Inherits from the Car class
+
+Variables:
+
+float motorPower: the hybrid's motor power
+float usage: the hybrid's usage
+float batteryCapacity: the hybrid's battery capacity
+
+Methods:
+
+The accessors and setters are self-explanatory in the code
+print(): a virtual function which overrides the car's print function
+
+-------------
+
+Motorcycle: A more specific vehicle - Inherits from the Vehicle class
+
+Variables:
+
+int engineSize: the motorcycle's engine size
+float frontWheelSize: the motorcycle's front wheel size
+float backWheelSize: the motorcycle's back wheel size
+
+Methods:
+
+Accessors and setters self-explanatory
+print(): a virtual function which overrides the vehicle's print funciton
+
+-------------
+
+Bus: A more specific vehicle - Inherts from the Vehicle class
+
+Variables:
+
+int capacity: the capacity of the bus
+
+Methods:
+
+Accessors and setters self-explanatory
+print(): a virtual function which overrides the vehicle's print funciton
+
+------------
+
+Task: An operation which will be performed to a vehicle
+
+Variables:
+
+string name: the name of the task
+float partsCost: the cost of parts for this task
+float laborCost: the cost of labor for this task
+Task *next: a pointer to another task - used to create a list of tasks
+
+Methods:
+
+Task(): Constructor --- Sets parts and labor to 0 and next to NULL
+Task( const string &c, float p, float l ): Constructor --- Sets parts cost to p, labor cost to l, name to c, and next to NULL
+printTask(): prints the tasks name, parts cost, and labor cost
+getParts(): returns the parts cost of the task
+getLabor(): returns the labor cost of the task
+
+-----------
+
+Task_List: A class to hold the tasks and the parts and labor costs for
+each one
+
+Variables:
+
+float laborCosts[]: holds the current labor costs for each task
+float partCosts[]: holds the current part costs for each task
+static const string names[]: holds the names for the tasks
+
+Methods:
+
+Accessors and setters are self-explanatory in the code
+printList(): prints out each tasks name, parts cost, and labor cost
